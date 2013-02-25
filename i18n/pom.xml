@@ -13,9 +13,6 @@
     <!-- Specify hard-coded project properties here -->
     
     <properties>
-        <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
-          <logging.level>ALL</logging.level>
-        <downloadSources>true</downloadSources>
     </properties>
 
     <build>
