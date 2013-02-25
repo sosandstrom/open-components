@@ -12,7 +12,7 @@
 
     <!--           Service             -->
     <bean id="translationService" class="com.wadpam.open.i18n.service.TranslationService">
-        <property name="i18nDao" ref="di18nTranslationDao" />
+        <property name="i18nDao" ref="di18nTransDao" />
     </bean>
 
     <!--           Controllers             -->
@@ -21,7 +21,9 @@
     </bean>
 
     <!--           DAO             -->
-    <bean id="di18nTranslationDao"
+    <!-- 
+     -->
+    <bean id="di18nTransDao"
           class="com.wadpam.open.i18n.dao.Di18nTranslationDaoBean">
     </bean>
 
