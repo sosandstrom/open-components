@@ -2,9 +2,9 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.wadpam.openserver</groupId>
+        <groupId>com.wadpam.opencomponents</groupId>
         <artifactId>parent</artifactId>
-        <version>15-SNAPSHOT</version>
+        <version>1-SNAPSHOT</version>
     </parent>
     <artifactId>i18n</artifactId>
     <packaging>jar</packaging>
@@ -159,23 +159,23 @@
     	 <dependency>
             <groupId>com.wadpam.openserver</groupId>
             <artifactId>transactions-gae</artifactId>
-            <version>${project.version}</version>
+            <version>${openserver.version}</version>
         </dependency>
         
        <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.wadpam.openserver</groupId>
             <artifactId>json</artifactId>
-            <version>${project.version}</version>
+            <version>${openserver.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.wadpam.openserver</groupId>
             <artifactId>jsonp</artifactId>
-            <version>${project.version}</version>
+            <version>${openserver.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.wadpam.openserver</groupId>
             <artifactId>mvc-boiler</artifactId>
-            <version>${project.version}</version>
+            <version>${openserver.version}</version>
         </dependency>
         
         <dependency>

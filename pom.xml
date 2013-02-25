@@ -10,6 +10,7 @@
 
     <modules>
         <module>users</module>
+        <module>i18n</module>
     </modules>
     
     <properties>

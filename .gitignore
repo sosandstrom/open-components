@@ -1,4 +1,5 @@
 target/
 *.releaseBackup
 release.properties
-
+.project
+.settings/
