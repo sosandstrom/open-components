@@ -9,6 +9,7 @@
     <name>Open-Components parent</name>
 
     <modules>
+        <module>users</module>
     </modules>
     
     <properties>
