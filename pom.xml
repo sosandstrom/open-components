@@ -11,6 +11,7 @@
     <modules>
         <module>users</module>
         <module>i18n</module>
+	<module>tag</module>
     </modules>
     
     <properties>
