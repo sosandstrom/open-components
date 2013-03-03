@@ -8,7 +8,7 @@
     </parent>
     <artifactId>i18n</artifactId>
     <packaging>jar</packaging>
-    <name>open-i18n Component</name>
+    <name>Open-Components i18n</name>
 
     <!-- Specify hard-coded project properties here -->
     
