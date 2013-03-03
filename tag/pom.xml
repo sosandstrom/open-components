@@ -8,7 +8,7 @@
     </parent>
     <artifactId>tag</artifactId>
     <packaging>jar</packaging>
-    <name>open-tag Component</name>
+    <name>Open-Components tag</name>
 
     <!-- Specify hard-coded project properties here -->
     
