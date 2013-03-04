@@ -1,34 +1,24 @@
 package com.wadpam.open.i18n.web;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.wadpam.docrest.domain.RestCode;
 import com.wadpam.docrest.domain.RestReturn;
 import com.wadpam.open.exceptions.NotFoundException;
-import com.wadpam.open.exceptions.ServerErrorException;
-import com.wadpam.open.i18n.domain.Di18nTranslation;
-import com.wadpam.open.i18n.json.Ji18nTranslation;
-import com.wadpam.open.i18n.service.TranslationService;
-
+import com.wadpam.open.i18n.domain.Di18n;
+import com.wadpam.open.i18n.json.Ji18n;
+import com.wadpam.open.i18n.service.I18nService;
+import com.wadpam.open.mvc.CrudController;
 /**
  * The i18n controller implements all REST methods related to translations.
  * There methods should preferably only be user by some kind of backoffice interface
@@ -40,280 +30,94 @@ import com.wadpam.open.i18n.service.TranslationService;
  * @author sophea <a href='mailto:sm@goldengekko.com'> sophea </a>
  * @version $id$ - $Revision$
  * @date 2013
+ * @author sophea <a href='mailto:sm@goldengekko.com'> sophea </a>
+ * @version $id$ - $Revision$
+ * @date 2013
  */
-@RestReturn(value = Ji18nTranslation.class)
+@RestReturn(value = Ji18n.class)
 @Controller
 @RequestMapping(value="{domain}/i18n")
-public class I18nController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(I18nController.class);
-
-    private static final int ERR_NOT_FOUND = TranslationService.ERR_TRANSLATION_SERVICE + 100;
-    private static final int ERR_BAD_REQUEST = TranslationService.ERR_TRANSLATION_SERVICE + 102;
-    private static final int ERR_SERVER_ERROR = TranslationService.ERR_TRANSLATION_SERVICE + 103;
+public class I18nController extends CrudController<Ji18n,  Di18n, String, I18nService>{
     
-
-    private static final Converter CONVERTER = new Converter();
-
-    private TranslationService translationService;
-
-    /**
-     * Add a localized translation.
-     * @param parent the parent resource being translated
-     * @param locale the locale
-     * @param string localized string value
-     * @param imageUrl localized image
-     * @param linkUrl localized url
-     * @return redirect to the newly created translation
-     */
-    @RestReturn(value= Ji18nTranslation.class, entity=Ji18nTranslation.class, code={
-            @RestCode(code=302, message="OK", description="Redirect to newly created translation")
-    })
-    @RequestMapping(value="", method= RequestMethod.POST)
-    public RedirectView addTranslation(HttpServletRequest request,
-                                       UriComponentsBuilder uriBuilder,
-                                       @PathVariable String domain,
-                                       @RequestParam(required = true) String parent,
-                                       @RequestParam(required = true) String locale,
-                                       @RequestParam(required = false) String string,
-                                       @RequestParam(required = false) String imageUrl,
-                                       @RequestParam(required = false) String linkUrl) {
-        
-        Key parentKey = KeyFactory.stringToKey(parent);
-        final Di18nTranslation body = translationService.addTranslation(parentKey, locale, string, imageUrl, linkUrl);
-
-        if (null == body) {
-            throw new ServerErrorException(ERR_SERVER_ERROR, String.format("Failed to create new translation for locale:%s", locale));
-        }
-
-        final Ji18nTranslation ji18nTranslation = CONVERTER.convert(body);
-        
-        return new RedirectView(uriBuilder.path("/{domain}/i18n/{id}")
-                .buildAndExpand(domain, ji18nTranslation.getId()).toUriString());
+  private static final int ERR_NOT_FOUND = 100;
+  private static final int ERR_BAD_REQUEST =  102;
+  private static final int ERR_SERVER_ERROR =  103;
+    
+    protected I18nController() {
+        super(Ji18n.class);
     }
-
+    
+    
     /**
-     * Get a localized translation by id as KeyString
-     * @param id the id of the translation
-     * @return the translation
-     */
-    @RestReturn(value= Ji18nTranslation.class, entity=Ji18nTranslation.class, code={
-        @RestCode(code=200, message="OK", description="Translation found"),
-        @RestCode(code=404, message="NOK", description="Translations not found")
-    })
-    @RequestMapping(value="{id}", method= RequestMethod.GET)
-    public ResponseEntity<Ji18nTranslation> getTranslation(HttpServletRequest request,
-                                                           @PathVariable String id) {
-        try {
-            final Key key = KeyFactory.stringToKey(id);
-            final Di18nTranslation body = translationService.getTranslation(key);
-            
-            if (null == body) {
-                throw new NotFoundException(ERR_NOT_FOUND, String.format("translation not found for id:%s", id));
-            }
-            return new ResponseEntity<Ji18nTranslation>(CONVERTER.convert(body), HttpStatus.OK);
-            
-            //invalid key?
-        } catch (IllegalArgumentException e){
-            throw new ServerErrorException(ERR_NOT_FOUND, String.format("translation not found for id:%s", id));
-        }
-    }
-
-
-    /**
-     * Get a localized translation for a specific locale and parent.
-     * @param parent the parent key resource being translated   
+     * Get a localized i18n for a specific locale and parent.
+     * 
+     * @param parent the parent key resource being translated
      * @param locale the locale
      * @return the translation
      */
-    @RestReturn(value= Ji18nTranslation.class, entity=Ji18nTranslation.class, code={
-            @RestCode(code=200, message="OK", description="Translation found"),
-            @RestCode(code=404, message="NOK", description="Translations not found")
-    })
-    @RequestMapping(value="", method= RequestMethod.GET, params = {"parent", "locale"})
-    public ResponseEntity<Ji18nTranslation> getTranslation(HttpServletRequest request,
-                                            @RequestParam(required = true) String parent,
-                                            @RequestParam(required = true) String locale) {
+    @RestReturn(value = Ji18n.class, entity = Ji18n.class, code = {
+            @RestCode(code = 200, message = "OK", description = "Translation found"),
+            @RestCode(code = 404, message = "NOK", description = "Translations not found")})
+    @RequestMapping(value = "", method = RequestMethod.GET, params = {"parent", "locale"})
+    public ResponseEntity<Ji18n> getI18n(HttpServletRequest request, @RequestParam(required = true) String parent,
+            @RequestParam(required = true) String locale) {
 
-        Key parentKey = KeyFactory.stringToKey(parent);
-        final Di18nTranslation body = translationService.getTranslation(parentKey, locale);
+        final Di18n body = service.get(parent, locale);
 
         if (null == body) {
-            throw new NotFoundException(ERR_NOT_FOUND, String.format("Locale:%s for parent:%s not found", parentKey, locale));
+            throw new NotFoundException(ERR_NOT_FOUND, String.format("Locale:%s for parent:%s not found", parent, locale));
         }
-        
-        return new ResponseEntity<Ji18nTranslation>(CONVERTER.convert(body), HttpStatus.OK);
-    }
 
+        return new ResponseEntity<Ji18n>(convertDomain(body), HttpStatus.OK);
+    }
+    
     /**
-     * Get all localized translation for a specific parent.
+     * Get all localized i18n for a specific parent.
+     * 
      * @param parent the parent key resource being translated
      * @return a list of translations
      */
-    @RestReturn(value= Ji18nTranslation.class, entity=Ji18nTranslation.class, code={
-            @RestCode(code=200, message="OK", description="Translation found")
-    })
-    @RequestMapping(value="", method= RequestMethod.GET, params = "parent")
-    public ResponseEntity<Collection<Ji18nTranslation>> getTranslationsForParent(
-            HttpServletRequest request,
+    @RestReturn(value = Ji18n.class, entity = Ji18n.class, code = {@RestCode(code = 200, message = "OK", description = "Translation found")})
+    @RequestMapping(value = "", method = RequestMethod.GET, params = "parent")
+    public ResponseEntity<Collection<Ji18n>> getI18nsForParent(HttpServletRequest request,
             @RequestParam(required = true) String parent) {
-        try {
-            Key parentKey = KeyFactory.stringToKey(parent);
-            
-            final Iterable<Di18nTranslation> di18nTranslations = translationService.getTranslations(parentKey);
+
+            final Iterable<Di18n> body = service.getI18ns(service.getPrimaryKey(parent));
+
+            return new ResponseEntity(convert(body), HttpStatus.OK);
+
+    }
     
-            return new ResponseEntity<Collection<Ji18nTranslation>>((Collection<Ji18nTranslation>)CONVERTER.convert(di18nTranslations), HttpStatus.OK);
-            
-        } catch (IllegalArgumentException e) {
-            throw new ServerErrorException(ERR_SERVER_ERROR, e.getMessage());
+    @Override
+    protected Ji18n populateRequestBody(HttpServletRequest request, Model model, Ji18n body) {
+        //create parent key as Object
+        if (body.getParent()!=null) {
+            body.setParent(service.getPrimaryKey((String)body.getParent()));
         }
+        return super.populateRequestBody(request, model, body);
+    }
+   
+    @Override
+    public void convertDomain(Di18n from, Ji18n to) {
+        to.setParent(service.getKeyString(from.getParent()));
+        to.setLocale(from.getLocale());
+        to.setLocalizedString(from.getLocalizedString());
+        to.setLocalizedImage(from.getLocalizedImage());
+        to.setLocalizedUrl(from.getLocalizedUrl());
     }
 
-
-    /**
-     * Get all localized translation for a list fo parents.
-     * @param parents a list of parents
-     * @return a map of translations
-     */
-    @RestReturn(value= Map.class, entity=Map.class, code={
-            @RestCode(code=200, message="OK", description="Translation found")
-    })
-    @RequestMapping(value="", method= RequestMethod.GET, params = "parents")
-    public ResponseEntity<Map<String, Collection<Ji18nTranslation>>> getTranslationsForParents(
-            HttpServletRequest request,
-            @RequestParam(required = true) String[] parents) {
-        try {
-            Collection<Key> parentKeys = new ArrayList<Key>(parents.length);
-            for (String parentId : parents) {
-                parentKeys.add(KeyFactory.stringToKey(parentId));
-            }
-            final Map<Key, Iterable<Di18nTranslation>> di18nTranslations = translationService.getTranslations(parentKeys);
-    
-            // Build response json
-            Map<String, Collection<Ji18nTranslation>> result = new HashMap<String, Collection<Ji18nTranslation>>();
-            for (Map.Entry<Key, Iterable<Di18nTranslation>> entry : di18nTranslations.entrySet())
-                result.put(KeyFactory.keyToString(entry.getKey()), (Collection<Ji18nTranslation>)CONVERTER.convert(entry.getValue()));
-    
-            return new ResponseEntity<Map<String, Collection<Ji18nTranslation>>>(result, HttpStatus.OK);
-            
-        } catch (IllegalArgumentException e) {
-            throw new ServerErrorException(ERR_SERVER_ERROR, e.getMessage());
-        }
-    }
-
-
-    /**
-     * Get localized translation in a specific locale for a list fo parents.
-     * @param parents a list
-     * @param locale the locale
-     * @return a list of translations
-     */
-    @RestReturn(value= Di18nTranslation.class, entity=Di18nTranslation.class, code={
-            @RestCode(code=200, message="OK", description="Translation found")
-    })
-    @RequestMapping(value="", method= RequestMethod.GET, params = {"parents", "locale"})
-    public ResponseEntity<Map<String, Ji18nTranslation>> getTranslationsForLocaleForParents(
-            HttpServletRequest request,
-            @RequestParam(required = true) String[] parents,
-            @RequestParam(required = true) String locale) {
-        try {
-            
-            Collection<Key> parentKeys = new ArrayList<Key>(parents.length);
-            // build key
-            for (String parentId : parents)
-                parentKeys.add(KeyFactory.stringToKey(parentId));
-            final Map<Key, Di18nTranslation> di18nTranslations = translationService.getTranslations(parentKeys, locale);
-            
-            // Build response json
-            Map<String, Ji18nTranslation> result = new HashMap<String, Ji18nTranslation>();
-            for (Map.Entry<Key, Di18nTranslation> entry : di18nTranslations.entrySet()) {
-                result.put(KeyFactory.keyToString(entry.getKey()), CONVERTER.convert(entry.getValue()));
-            }
-            return new ResponseEntity<Map<String, Ji18nTranslation>>(result, HttpStatus.OK);
-            
-       } catch (IllegalArgumentException e) {
-                throw new ServerErrorException(ERR_SERVER_ERROR, e.getMessage());
-       }
-    }
-
-    /**
-     * Delete a localized translation by id
-     * @param id the id of the translation
-     * @return the translation
-     */
-    @RestReturn(value= Ji18nTranslation.class, entity=Ji18nTranslation.class, code={
-            @RestCode(code=200, message="OK", description="Translation deleted"),
-            @RestCode(code=404, message="NOK", description="Translation not found")
-    })
-    @RequestMapping(value="{id}", method= RequestMethod.DELETE)
-    public ResponseEntity<Ji18nTranslation> deleteTranslation(HttpServletRequest request,
-                                                              @PathVariable String id) {
-        try {
-            final Key key = KeyFactory.stringToKey(id);
-            final Di18nTranslation body = translationService.deleteTranslation(key);
-    
-            return new ResponseEntity<Ji18nTranslation>(CONVERTER.convert(body),HttpStatus.OK);
-            
-        } catch (IllegalArgumentException e) {
-            throw new ServerErrorException(ERR_SERVER_ERROR, e.getMessage());
-        }
-    }
-
-    /**
-     * Delete a localized translation for a specific local and parent
-     * @param parent the parent resource being translated
-     * @param locale the locale
-     * @return the translation
-     */
-    @RestReturn(value= Ji18nTranslation.class, entity=Ji18nTranslation.class, code={
-            @RestCode(code=200, message="OK", description="Translation deleted"),
-            @RestCode(code=404, message="NOK", description="Translation not found")
-    })
-    @RequestMapping(value="", method= RequestMethod.DELETE, params = "locale")
-    public ResponseEntity<Ji18nTranslation> deleteTranslation(HttpServletRequest request,
-                                                           @RequestParam(required = true) String parent,
-                                                           @RequestParam(required = true) String locale) {
-        try {
-            Key parentKey = KeyFactory.stringToKey(parent);
-            final Di18nTranslation body = translationService.deleteTranslation(parentKey, locale);
-            
-        } catch (IllegalArgumentException e) {
-            throw new ServerErrorException(ERR_SERVER_ERROR, e.getMessage());
-        }
-
-        return new ResponseEntity<Ji18nTranslation>(HttpStatus.OK);
+    @Override
+    public void convertJson(Ji18n from, Di18n to) {
+        to.setParent(from.getParent());
+        to.setLocale(from.getLocale());
+        to.setLocalizedString(from.getLocalizedString());
+        to.setLocalizedImage(from.getLocalizedImage());
+        to.setLocalizedUrl(from.getLocalizedUrl());
         
     }
-
-
-    /**
-     * Delete all localized translation for a specific parent
-     * @param parent the parent resource being deleted
-     * @return a list of translations
-     */
-    @RestReturn(value= Ji18nTranslation.class, entity=Ji18nTranslation.class, code={
-            @RestCode(code=200, message="OK", description="Translation deleted"),
-            @RestCode(code=404, message="NOK", description="Translations not found")
-    })
-    @RequestMapping(value="", method= RequestMethod.DELETE, params = "parent")
-    public ResponseEntity<Collection<Ji18nTranslation>> deleteTranslationsForParent(
-            HttpServletRequest request,
-            @RequestParam(required = true) String parent) {
-        try {
-            Key parentKey = KeyFactory.stringToKey(parent);
-            final int result = translationService.deleteTranslationForParent(parentKey);
     
-            return new ResponseEntity<Collection<Ji18nTranslation>>(HttpStatus.OK);
-            
-        } catch (IllegalArgumentException e) {
-            throw new ServerErrorException(ERR_SERVER_ERROR, e.getMessage());
-        }
+    public void setService(I18nService service) {
+        this.service = service;
     }
 
-
-    // Setters
-    public void setTranslationService(TranslationService translationService) {
-        this.translationService = translationService;
-        CONVERTER.setTranslationDao(translationService.getI18nDao());
-    }
 }

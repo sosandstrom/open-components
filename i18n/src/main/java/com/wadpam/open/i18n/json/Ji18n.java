@@ -8,13 +8,13 @@ import com.wadpam.open.json.JBaseObject;
  * @version $id$ - $Revision$
  * @date 2013
  */
-public class Ji18nTranslation extends JBaseObject {
+public class Ji18n extends JBaseObject {
 
         /** The locale of the localized entity */
         private String            locale;
 
         /** The parent key this localization belongs to. E.g. a tag or category */
-        private String            parent;
+        private Object            parent;
 
         /** Localized string value */
         private String            localizedString;
@@ -25,7 +25,7 @@ public class Ji18nTranslation extends JBaseObject {
         /** Localized url */
         private String            localizedUrl;
 
-
+        
         @Override
         protected String subString() {
             return String.format("locale:%s string:%s", locale, localizedString);
@@ -65,11 +65,11 @@ public class Ji18nTranslation extends JBaseObject {
             this.localizedUrl = localizedUrl;
         }
 
-        public String getParent() {
+        public Object getParent() {
             return parent;
         }
 
-        public void setParent(String parent) {
+        public void setParent(Object parent) {
             this.parent = parent;
         }
 }

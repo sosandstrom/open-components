@@ -13,7 +13,7 @@ import sun.awt.image.ImageWatched.Link;
  * @mattiaslevin + @sopheamak
  */
 @Entity
-public class Di18nTranslation extends AbstractCreatedUpdatedEntity {
+public class Di18n extends AbstractCreatedUpdatedEntity {
 
     /** The locale of the localized entity */
     @Id
