@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import net.sf.mardao.core.Filter;
+import net.sf.mardao.core.dao.Dao;
 
 import com.wadpam.open.audit.domain.DAudit;
 
@@ -35,4 +36,7 @@ public class DAuditDaoBean
         return ids;
     }
 
+    public static Object getAuditKey(Dao entityDao) {
+        return entityDao.getPrimaryKey(null, AUDIT_PARENT_ID);
+    }
 }
