@@ -8,11 +8,11 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
 	">
 
-    <!-- i18n translation service -->
-
     <!--           Service             -->
+    
     <bean id="tagService" class="com.wadpam.open.tag.service.TagService">
         <property name="dao" ref="dTagDao" />
+        <property name="dAuditDao" ref="dAuditDao" />
     </bean>
 
     <!--           Controllers             -->

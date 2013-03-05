@@ -144,6 +144,11 @@
             <artifactId>mvc-boiler</artifactId>
             <version>${openserver.version}</version>
         </dependency>
+        <dependency>
+    		<groupId>com.wadpam.opencomponents</groupId>
+    		<artifactId>audit</artifactId>
+    		<version>2-SNAPSHOT</version>
+    	</dependency>
         
         <dependency>
             <groupId>net.sf.mardao</groupId>
