@@ -12,6 +12,7 @@
         <module>users</module>
         <module>i18n</module>
 	<module>tag</module>
+	<module>audit</module>
     </modules>
     
     <properties>
