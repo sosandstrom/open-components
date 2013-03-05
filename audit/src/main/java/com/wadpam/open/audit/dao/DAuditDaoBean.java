@@ -39,4 +39,28 @@ public class DAuditDaoBean
     public static Object getAuditKey(Dao entityDao) {
         return entityDao.getPrimaryKey(null, AUDIT_PARENT_ID);
     }
+    
+    public boolean deleteWithAudit(Dao dao, Long id) {
+        if (null == id) {
+            return false;
+        }
+        final boolean deleted = dao.delete(id);
+
+        // create the audit record
+        auditDelete(dao, id);
+
+        return deleted;
+    }
+    /**
+     * Persists an audit record, representing a deleted entity
+     * @param entityDao
+     * @param entityId
+     * @return the persisted DAudit entity
+     */
+    protected DAudit auditDelete(Dao entityDao, long entityId) {
+        final Object parentKey = DAuditDaoBean.getAuditKey(entityDao);
+        final DAudit audit = new DAudit(parentKey, entityId);
+        persist(audit);
+        return audit;
+    }
 }
