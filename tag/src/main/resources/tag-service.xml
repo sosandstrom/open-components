@@ -8,6 +8,7 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
 	">
 
+	<import resource="classpath:/tag-spring-dao.xml"/>
     <!--           Service             -->
     
     <bean id="tagService" class="com.wadpam.open.tag.service.TagService">
@@ -22,9 +23,9 @@
 
     <!--           DAO             -->
     <!-- 
-     -->
     <bean id="dTagDao"
           class="com.wadpam.open.tag.dao.DTagDaoBean">
     </bean>
+     -->
 
 </beans>

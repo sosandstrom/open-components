@@ -3,3 +3,5 @@ target/
 release.properties
 .project
 .settings/
+bin/
+.classpath
