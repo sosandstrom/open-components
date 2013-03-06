@@ -89,6 +89,10 @@ public class TagController extends CrudController<JTag, DTag, Long, TagService> 
         this.service = tagService;
     }
 
+    public TagService getService() {
+        return this.service;
+    }
+
     @Override
     public void convertDomain(DTag from, JTag to) {
 
