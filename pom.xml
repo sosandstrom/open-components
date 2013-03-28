@@ -8,6 +8,9 @@
     <packaging>pom</packaging>
     <name>Open-Components parent</name>
 
+    <url>http://github.com/sosandstrom/open-components</url>
+    <description>Open Components contains reusable components and services</description>
+
     <modules>
         <module>users</module>
         <module>i18n</module>
@@ -30,6 +33,15 @@
         <downloadSources>false</downloadSources>
     </properties>
     
+    <licenses>
+        <license>
+            <name>GPL v3</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>Third party libraries used in this project have their own licenses.</comments>
+        </license>
+    </licenses>
+        
     <build>
         <pluginManagement>
             <plugins>
@@ -128,35 +140,73 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>sosandstrom-github-releases</id>
-            <name>sosandstrom Maven releases repo at GitHub</name>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>https://raw.github.com/sosandstrom/maven-repo/master/releases</url>
-        </pluginRepository>
-    </pluginRepositories>
-    <repositories>
-        <repository>
-            <id>sosandstrom-github-releases</id>
-            <name>sosandstrom Maven releases repo at GitHub</name>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>https://raw.github.com/sosandstrom/maven-repo/master/releases</url>
-        </repository>
-    </repositories>
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/sosandstrom/open-components/issues</url>
+    </issueManagement>
 
-    <!--Profiles for handling different location of tools.jar on OSX-->
     <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.8</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadoc</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.1.2</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <repository>
+                    <id>sonatype-nexus-staging</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+
+        <!--Profiles for handling different location of tools.jar on OSX-->
         <profile>
             <id>default-profile</id>
             <activation>
