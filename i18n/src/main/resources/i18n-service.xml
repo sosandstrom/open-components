@@ -11,7 +11,7 @@
     <!-- i18n translation service -->
 
     <!--           Service             -->
-    <bean id="i18nService" class="com.wadpam.open.i18n.service.I18nService">
+    <bean id="i18nService" class="com.wadpam.open.i18n.service.I18nServiceImpl">
         <property name="dao" ref="dI18nDao" />
     </bean>
 

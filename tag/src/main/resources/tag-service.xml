@@ -11,7 +11,7 @@
 	<import resource="classpath:/tag-spring-dao.xml"/>
     <!--           Service             -->
     
-    <bean id="tagService" class="com.wadpam.open.tag.service.TagService">
+    <bean id="tagService" class="com.wadpam.open.tag.service.TagServiceImpl">
         <property name="dao" ref="dTagDao" />
         <property name="dAuditDao" ref="dAuditDao" />
     </bean>

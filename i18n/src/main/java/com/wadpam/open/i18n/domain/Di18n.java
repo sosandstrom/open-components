@@ -6,7 +6,6 @@ import javax.persistence.Id;
 
 import net.sf.mardao.core.Parent;
 import net.sf.mardao.core.domain.AbstractCreatedUpdatedEntity;
-import sun.awt.image.ImageWatched.Link;
 
 /**
  * Handle localization of strings and other resources.
