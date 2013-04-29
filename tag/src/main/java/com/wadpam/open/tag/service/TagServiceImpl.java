@@ -26,7 +26,7 @@ public class TagServiceImpl extends MardaoCrudService<DTag, Long, DTagDao>
     @Override
     public void delete(String parentKeyString, Long id) {
         // TODO Auto-generated method stub
-        dAuditDao.deleteWithAudit(dAuditDao, id);
+        dAuditDao.deleteWithAudit(dao, id);
     }
 
     public Iterable<DTag> getAll() {
