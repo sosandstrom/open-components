@@ -7,6 +7,9 @@ public class JTag extends JBaseObject {
     /** Tag name, maybe not used */
     private String name;
 
+    /** The Tag description */
+    private String description;
+
     /** Tag icon url */
     private String iconUrl;
 
@@ -48,4 +51,11 @@ public class JTag extends JBaseObject {
         this.appArg0 = appArg0;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

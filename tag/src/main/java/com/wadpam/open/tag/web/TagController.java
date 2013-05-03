@@ -101,6 +101,7 @@ public class TagController extends CrudController<JTag, DTag, Long, TagService> 
         to.setIconUrl(from.getIconUrl());
         to.setName(from.getName());
         to.setPriority(from.getPriority());
+        to.setDescription(from.getDescription());
 
     }
 
@@ -112,6 +113,7 @@ public class TagController extends CrudController<JTag, DTag, Long, TagService> 
         to.setIconUrl(from.getIconUrl());
         to.setName(from.getName());
         to.setPriority(from.getPriority());
+        to.setDescription(from.getDescription());
 
     }
 }

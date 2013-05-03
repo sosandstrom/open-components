@@ -17,6 +17,10 @@ public class DTag extends AbstractLongEntity {
     @Basic
     private String name;
 
+    /** The tag description */
+    @Basic
+    private String description;
+
     /** The tag icon url */
     @Basic
     private String iconUrl;
@@ -61,4 +65,11 @@ public class DTag extends AbstractLongEntity {
         this.appArg0 = appArg0;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
