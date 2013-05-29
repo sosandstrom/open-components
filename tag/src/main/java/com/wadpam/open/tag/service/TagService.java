@@ -1,8 +1,8 @@
 package com.wadpam.open.tag.service;
 
-import com.wadpam.open.mvc.CrudService;
 import java.util.Date;
 
+import com.wadpam.open.mvc.CrudService;
 import com.wadpam.open.tag.domain.DTag;
 
 public interface TagService extends CrudService<DTag, Long> {

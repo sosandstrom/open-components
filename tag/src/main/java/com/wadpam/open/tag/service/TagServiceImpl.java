@@ -1,7 +1,9 @@
 package com.wadpam.open.tag.service;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,8 @@ import com.wadpam.open.audit.dao.DAuditDaoBean;
 import com.wadpam.open.mvc.MardaoCrudService;
 import com.wadpam.open.tag.dao.DTagDao;
 import com.wadpam.open.tag.domain.DTag;
+import com.wadpam.open.tag.util.AbstractSortType;
+import com.wadpam.open.tag.util.ObjectComparator;
 
 public class TagServiceImpl extends MardaoCrudService<DTag, Long, DTagDao> 
         implements TagService {
@@ -30,7 +34,12 @@ public class TagServiceImpl extends MardaoCrudService<DTag, Long, DTagDao>
     }
 
     public Iterable<DTag> getAll() {
-        return dao.queryAll();
+        
+        Iterable<DTag> dTagIt = dao.queryAll();
+
+      //sort by Name
+        Collections.sort((List<DTag>) dTagIt, new ObjectComparator(AbstractSortType.ASC, "getName"));
+        return dTagIt;
 
     }
 
