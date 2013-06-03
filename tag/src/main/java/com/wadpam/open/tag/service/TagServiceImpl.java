@@ -44,7 +44,11 @@ public class TagServiceImpl extends MardaoCrudService<DTag, Long, DTagDao>
     }
 
     public Iterable<DTag> getDTagByArg0(String appArg0) {
-        return dao.queryByAppArg0(appArg0);
+
+        Iterable<DTag> dTagIt = dao.queryByAppArg0(appArg0);
+
+        Collections.sort((List<DTag>) dTagIt, new ObjectComparator(AbstractSortType.ASC, "getName"));
+        return dTagIt;
     }
 
     public long getLastUpdate(Date since) {
