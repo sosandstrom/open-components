@@ -25,8 +25,9 @@ public class DAuditDaoBean
 	// TODO: implement your Business Methods here
     @Override
     public Collection<Long> whatsDeleted(Date since, Object parentKey) {
+        
         final Filter sinceFilter = createGreaterThanOrEqualFilter(COLUMN_NAME_UPDATEDDATE, since);
-        final Iterable<DAudit> i = queryIterable(true, 0, -1, parentKey, null, COLUMN_NAME_UPDATEDDATE, true, null, false, sinceFilter);
+        final Iterable<DAudit> i = queryIterable(true, 0, -1, parentKey, null, null, true, null, false, sinceFilter);
         final ArrayList<Long> ids = new ArrayList<Long>();
         
         for (DAudit d : i) {
