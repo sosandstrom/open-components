@@ -15,7 +15,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 public class MardaoPrincipalInterceptor extends HandlerInterceptorAdapter {
     
     /** must be same as DomainInterceptor value */
-    protected static final String ATTR_NAME_USERNAME = "_username";
+    protected static final String ATTR_NAME_USERNAME = "com.wadpam.open.security.username";
     
     static final Logger LOG = LoggerFactory.getLogger(MardaoPrincipalInterceptor.class);
     
@@ -42,6 +42,7 @@ public class MardaoPrincipalInterceptor extends HandlerInterceptorAdapter {
         if (null == currentUser) {
             currentUser = (String) request.getAttribute(ATTR_NAME_USERNAME);
         }
+
         return currentUser;
     }
 

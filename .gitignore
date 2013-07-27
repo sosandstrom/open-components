@@ -5,3 +5,5 @@ release.properties
 .settings/
 bin/
 .classpath
+.idea
+*.iml
