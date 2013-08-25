@@ -65,19 +65,20 @@ public class TagController extends CrudController<JTag, DTag, Long, TagService> 
      * Retrieves all tags which have reference as appArg0 with support Header If-Modified-Since is optional, timestamp of last
      * update; use "Sat, 29 Oct 1994 19:43:31 GMT"
      * 
-     * @param appArg0
-     *            - find all tags which have references as appArg0
+     * @param appArg0 - find all tags which have references as appArg0 - for telenor is countryId   
      * @return Collection of JTag objects
      */
     @RestReturn(value = JTag.class, code = {@RestCode(code = 200, description = "get Entity successfully", message = "ok")})
     @ResponseBody
     @RequestMapping(value = "v10", params = "appArg0", method = RequestMethod.GET)
     public Iterable<JTag> getByAppArg0(WebRequest webRequest,
-            @RequestHeader(required = false, value = "If-Modified-Since") Date since, @RequestParam String appArg0,
-            HttpServletRequest request, HttpServletResponse response) {
+            @RequestHeader(required = false, value = "If-Modified-Since") Date since, 
+            @RequestParam String appArg0,
+            HttpServletRequest request, 
+            HttpServletResponse response) {
 
         Iterable<JTag> jTagIterable = convert(service.getDTagByArg0(appArg0));
-
+        
         if (since != null) {
             if (webRequest.checkNotModified(service.getLastUpdate(since)))
                 return null;
@@ -102,7 +103,7 @@ public class TagController extends CrudController<JTag, DTag, Long, TagService> 
         to.setName(from.getName());
         to.setPriority(from.getPriority());
         to.setDescription(from.getDescription());
-
+        to.setFeature(from.getFeature());
     }
 
     @Override
@@ -114,6 +115,7 @@ public class TagController extends CrudController<JTag, DTag, Long, TagService> 
         to.setName(from.getName());
         to.setPriority(from.getPriority());
         to.setDescription(from.getDescription());
+        to.setFeature(from.getFeature());
 
     }
 }

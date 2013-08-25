@@ -18,6 +18,9 @@ public class JTag extends JBaseObject {
 
     /** Key of ref */
     private String appArg0;
+    
+    /**Telenor will use this setting up collection will be part of around-me section: 1*/
+    private Long feature;
 
     public String getName() {
         return name;
@@ -57,5 +60,13 @@ public class JTag extends JBaseObject {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getFeature() {
+        return feature;
+    }
+
+    public void setFeature(Long feature) {
+        this.feature = feature;
     }
 }

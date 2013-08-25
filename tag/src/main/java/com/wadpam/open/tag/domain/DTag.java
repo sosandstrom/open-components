@@ -32,6 +32,10 @@ public class DTag extends AbstractLongEntity {
     /** The key to the ref asset, it could be Country */
     @Basic
     private String appArg0;
+    
+    /**Telenor will use this setting up collection will be part of around-me section: 1*/
+    @Basic
+    private Long feature;
 
     public String getName() {
         return name;
@@ -71,5 +75,13 @@ public class DTag extends AbstractLongEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getFeature() {
+        return feature;
+    }
+
+    public void setFeature(Long feature) {
+        this.feature = feature;
     }
 }
