@@ -233,9 +233,6 @@
         </profile>
 
     </profiles>
-     <scm>
-        <url>https://github.com/sosandstrom/open-components</url>
-        <developerConnection>scm:git:ssh://git@github.com/sosandstrom/open-components.git</developerConnection>
-    </scm>
+     
     
 </project>
