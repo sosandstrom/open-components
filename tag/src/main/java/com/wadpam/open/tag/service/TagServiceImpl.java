@@ -1,20 +1,16 @@
 package com.wadpam.open.tag.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.appengine.repackaged.com.google.common.collect.Lists;
 import com.wadpam.open.audit.dao.DAuditDaoBean;
 import com.wadpam.open.mvc.MardaoCrudService;
 import com.wadpam.open.tag.dao.DTagDao;
 import com.wadpam.open.tag.domain.DTag;
-import com.wadpam.open.tag.util.AbstractSortType;
-import com.wadpam.open.tag.util.ObjectComparator;
 
 public class TagServiceImpl extends MardaoCrudService<DTag, Long, DTagDao> 
         implements TagService {
@@ -37,20 +33,23 @@ public class TagServiceImpl extends MardaoCrudService<DTag, Long, DTagDao>
     public Iterable<DTag> getAll() {
         
         Iterable<DTag> dTagIt = dao.queryAll();
-        List<DTag> dTagList = Lists.newArrayList(dTagIt);
+      //  List<DTag> dTagList = Lists.newArrayList(dTagIt);
       //sort by Name
-        Collections.sort(dTagList, new ObjectComparator(AbstractSortType.ASC, "getName"));
-        return dTagList;
+       // Collections.sort(dTagList, new ObjectComparator(AbstractSortType.ASC, "getName"));
+        return dTagIt;
 
     }
 
     public Iterable<DTag> getDTagByArg0(String appArg0) {
 
-        Iterable<DTag> dTagIt = dao.queryByAppArg0(appArg0);
-
-        List<DTag> dTagList = Lists.newArrayList(dTagIt);
-        Collections.sort(dTagList, new ObjectComparator(AbstractSortType.ASC, "getName"));
-        return dTagList;
+        Iterable<DTag> dTagIt = getAll();
+        Collection<DTag> fiter = new ArrayList<DTag>();
+        for (DTag dTag : dTagIt) {
+            if (appArg0 != null && appArg0.equals(dTag.getAppArg0())){
+                fiter.add(dTag);
+            }
+        }
+        return fiter;
     }
 
     public long getLastUpdate(Date since) {
