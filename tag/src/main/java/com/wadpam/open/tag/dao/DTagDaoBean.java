@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import net.sf.mardao.core.Filter;
+import net.sf.mardao.core.dao.DaoImpl;
 
 import com.wadpam.open.tag.domain.DTag;
 
