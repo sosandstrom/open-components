@@ -30,7 +30,9 @@ import com.wadpam.open.user.service.OpenUserService;
 @RequestMapping("{domain}/user")
 public class OpenUserController extends CrudController<JOpenUser, DOpenUser, Long, OpenUserService> {
 
-    private String attributeNameUsername = "_username";
+    // Default attribute name is matching the name set by the interceptor
+    // Can configure a different value in the Spring context
+    private String attributeNameUsername = "com.wadpam.open.security.username";
 
     public OpenUserController() {
         super(JOpenUser.class);
